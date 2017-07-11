@@ -1,33 +1,30 @@
 package storage
 
 import (
-	"os"
-	"path/filepath"
 	"archive/zip"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 )
 
 const (
 	ZipExtension = ".zip"
 )
 
-
-
-
 type File struct {
 	Name string
 	Size int64
-	Ext string
+	Ext  string
 }
 
 type ZipFile struct {
 	File
-	Path string
+	Path       string
 	InnerFiles []string
 }
 
-func NewZipFile(path string)  (*ZipFile, error){
+func NewZipFile(path string) (*ZipFile, error) {
 	f, err := os.Stat(path)
 	if err != nil {
 		return nil, err
@@ -41,9 +38,8 @@ func NewZipFile(path string)  (*ZipFile, error){
 		File: File{
 			Name: f.Name(),
 			Size: f.Size(),
-			Ext: filepath.Ext(path),
+			Ext:  filepath.Ext(path),
 		},
-
 	}, nil
 }
 
@@ -54,13 +50,13 @@ func (zp *ZipFile) fillInnerFiles(r *zip.ReadCloser) {
 	}
 }
 
-func (zp *ZipFile) Read() (map[string]zip.File, error){
+func (zp *ZipFile) Read() (map[string]zip.File, error) {
 	// Open a zip archive for reading.
-  	r, err := zip.OpenReader(zp.Path)
-  	if err != nil {
-  		return nil, err
-  	}
-  	defer r.Close()
+	r, err := zip.OpenReader(zp.Path)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Close()
 
 	files := make(map[string]zip.File, len(r.File))
 

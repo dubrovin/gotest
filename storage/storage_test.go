@@ -1,9 +1,9 @@
 package storage
 
 import (
-	"testing"
-	"github.com/stretchr/testify/require"
 	"fmt"
+	"github.com/stretchr/testify/require"
+	"testing"
 )
 
 func TestNewStorage(t *testing.T) {

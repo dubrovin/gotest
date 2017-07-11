@@ -1,16 +1,14 @@
 package storage
 
 import (
-	"path/filepath"
 	"os"
+	"path/filepath"
 )
 
 type Storage struct {
-	Files map[string]*ZipFile
+	Files   map[string]*ZipFile
 	RootDir string
 }
-
-
 
 func NewStorage(dir string) (*Storage, error) {
 	rootDir, err := filepath.Abs(dir)
@@ -19,14 +17,14 @@ func NewStorage(dir string) (*Storage, error) {
 	}
 
 	if _, err := os.Stat(rootDir); os.IsNotExist(err) {
-   		 err := os.Mkdir(rootDir, os.ModePerm)
+		err := os.Mkdir(rootDir, os.ModePerm)
 		if err != nil {
 			return nil, err
 		}
 	}
 
 	return &Storage{
-		Files: make(map[string]*ZipFile, 0),
+		Files:   make(map[string]*ZipFile, 0),
 		RootDir: rootDir,
 	}, nil
 }
