@@ -5,4 +5,5 @@ type Config struct {
 	ListenAddress string
 	ListenPort    string
 	CacheLimit    int64
+	DefaultTTL    int64
 }

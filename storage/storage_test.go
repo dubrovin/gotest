@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"github.com/dubrovin/gotest/utils"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
@@ -12,7 +13,7 @@ func TestNewStorage(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, stor)
 
-	DeleteDir(dir)
+	utils.DeleteDir(dir)
 }
 
 func TestStorage_Add(t *testing.T) {
@@ -22,7 +23,7 @@ func TestStorage_Add(t *testing.T) {
 	stor, err := NewStorage(dir)
 	require.NoError(t, err)
 	require.NotEmpty(t, stor)
-	CreateTestFile(tmpDir, tmpFile)
+	utils.CreateTestFile(tmpDir, tmpFile)
 
 	f, err := NewZipFile(fmt.Sprintf("%s/%s", tmpDir, tmpFile))
 	require.NoError(t, err)
@@ -31,6 +32,6 @@ func TestStorage_Add(t *testing.T) {
 	stor.Add(f)
 	require.Len(t, stor.Files, 1)
 
-	DeleteDir(tmpDir)
-	DeleteDir(dir)
+	utils.DeleteDir(tmpDir)
+	utils.DeleteDir(dir)
 }
