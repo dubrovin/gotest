@@ -43,4 +43,7 @@ curl http://127.0.0.1:8080/api/list
 curl -i -X POST -H "Content-Type: multipart/form-data" -F "data=@zip.zip" http://127.0.0.1:8080/api/upload
 ```
 
-В файле ab_log.txt представлен вывод ab -n 10000 -c 10 http://127.0.0.1:8080/api/list > ab_log.txt
+В файле ab_log.txt представлен вывод apache benchmark:
+```
+ab -n 10000 -c 10 http://127.0.0.1:8080/api/list > ab_log.txt
+```
