@@ -87,3 +87,21 @@ func (c *Cache) Checker() {
 	}
 
 }
+
+func (c *Cache) AddZipFile(path string) error{
+	c.mu.Lock()
+	zp, err := storage.NewZipFile(path)
+	if err != nil {
+		return err
+	}
+	c.Storage.Add(zp)
+	c.mu.Unlock()
+	return nil
+}
+
+func (c *Cache) GetAllZipFiles() map[string]*storage.ZipFile{
+	c.mu.RLock()
+	files := c.Storage.Files
+	c.mu.RUnlock()
+	return files
+}

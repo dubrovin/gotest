@@ -1,9 +1,10 @@
 package appconf
 
+import "time"
+
 type Config struct {
 	RootDirectory string
 	ListenAddress string
-	ListenPort    string
 	CacheLimit    int64
-	DefaultTTL    int64
+	DefaultTTL    time.Duration
 }
