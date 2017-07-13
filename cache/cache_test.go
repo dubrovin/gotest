@@ -6,6 +6,7 @@ import (
 	"github.com/dubrovin/gotest/utils"
 	"github.com/stretchr/testify/require"
 	"testing"
+	"time"
 )
 
 func TestNewCache(t *testing.T) {
@@ -13,7 +14,7 @@ func TestNewCache(t *testing.T) {
 	stor, err := storage.NewStorage(dir)
 	require.NoError(t, err)
 	c := NewCache(stor, 1000)
-	t.Log(c)
+	require.NotNil(t, c.Storage)
 	utils.DeleteDir(dir)
 }
 
@@ -69,7 +70,7 @@ func TestCache_GetFiles(t *testing.T) {
 	require.Len(t, stor.Files, 1)
 
 	// создаем кэш со стором
-	c := NewCache(stor, 1000)
+	c := NewCache(stor, time.Second)
 
 	// получаем часть файлов
 	filesMap, err := c.GetFiles(tmpFile, []string{"readme.txt"})
@@ -77,7 +78,6 @@ func TestCache_GetFiles(t *testing.T) {
 	b, ok := filesMap["readme.txt"]
 	require.True(t, ok)
 	require.NotNil(t, b)
-
 	utils.DeleteDir(tmpDir)
 	utils.DeleteDir(dir)
 }

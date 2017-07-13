@@ -30,6 +30,5 @@ func TestRead(t *testing.T) {
 	files, err := f.Read()
 	require.NoError(t, err)
 	require.Len(t, files, 3)
-	t.Log(files)
 	utils.DeleteDir(tmpDir)
 }

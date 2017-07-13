@@ -66,6 +66,24 @@ func (c *Cache) GetFiles(ZipFile string, Files []string) (map[string][]byte, err
 			return nil, err
 		}
 	}
+
+	// обновляем время жизни
+	c.Files[ZipFile].ttl = time.Now().Add(c.TTL).UnixNano()
 	c.mu.RUnlock()
 	return c.Files[ZipFile].file, nil
+}
+
+func (c *Cache) Checker() {
+	for {
+		time.Sleep(c.TTL)
+		c.mu.Lock()
+		for k := range c.Files {
+			if c.Files[k].ttl < time.Now().UnixNano() {
+				delete(c.Files, k)
+			}
+		}
+		c.mu.Unlock()
+
+	}
+
 }
