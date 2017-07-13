@@ -1,11 +1,11 @@
 package cache
 
 import (
+	"fmt"
 	"github.com/dubrovin/gotest/storage"
 	"github.com/dubrovin/gotest/utils"
 	"github.com/stretchr/testify/require"
 	"testing"
-	"fmt"
 )
 
 func TestNewCache(t *testing.T) {

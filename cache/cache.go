@@ -1,10 +1,10 @@
 package cache
 
 import (
-	"github.com/dubrovin/gotest/storage"
-	"sync"
 	"errors"
 	"fmt"
+	"github.com/dubrovin/gotest/storage"
+	"sync"
 	"time"
 )
 
@@ -17,7 +17,7 @@ type Cache struct {
 	Storage *storage.Storage
 	Files   map[string]*CachedFile
 	TTL     time.Duration
-	mu sync.RWMutex
+	mu      sync.RWMutex
 }
 
 func NewCache(stor *storage.Storage, ttl time.Duration) *Cache {
@@ -28,7 +28,7 @@ func NewCache(stor *storage.Storage, ttl time.Duration) *Cache {
 	}
 }
 
-func (c *Cache) GetZipFile(ZipFile string) ([]byte, error){
+func (c *Cache) GetZipFile(ZipFile string) ([]byte, error) {
 	// целый зип файл всегда достаем из хранилища
 	c.mu.RLock()
 	if zf, ok := c.Storage.Files[ZipFile]; ok {
@@ -40,7 +40,7 @@ func (c *Cache) GetZipFile(ZipFile string) ([]byte, error){
 
 func (c *Cache) loadFile(ZipFile string) (bool, error) {
 	// если файлы уже загружены, то ничего не делаем
-	if _, ok := c.Files[ZipFile]; ok{
+	if _, ok := c.Files[ZipFile]; ok {
 		return ok, nil
 	}
 
@@ -53,7 +53,7 @@ func (c *Cache) loadFile(ZipFile string) (bool, error) {
 	// заполняем кэш и время жизни
 	c.Files[ZipFile] = &CachedFile{
 		file: files,
-		ttl: time.Now().Add(c.TTL).UnixNano(),
+		ttl:  time.Now().Add(c.TTL).UnixNano(),
 	}
 	return true, nil
 }
@@ -61,7 +61,7 @@ func (c *Cache) loadFile(ZipFile string) (bool, error) {
 func (c *Cache) GetFiles(ZipFile string, Files []string) (map[string][]byte, error) {
 	c.mu.RLock()
 	// если файлов нет, то загружаем
-	if _, ok := c.Files[ZipFile]; !ok{
+	if _, ok := c.Files[ZipFile]; !ok {
 		if ok, err := c.loadFile(ZipFile); !ok {
 			return nil, err
 		}

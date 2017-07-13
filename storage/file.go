@@ -4,9 +4,9 @@ import (
 	"archive/zip"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"io/ioutil"
 )
 
 const (
