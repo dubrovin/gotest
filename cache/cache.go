@@ -1,25 +1,71 @@
 package cache
 
 import (
-	"archive/zip"
-	"github.com/dubrovin/coding-challenge/storage"
+	"github.com/dubrovin/gotest/storage"
+	"sync"
+	"errors"
+	"fmt"
+	"time"
 )
 
 type CachedFile struct {
-	file zip.File
+	file map[string][]byte
 	ttl  int64
 }
 
 type Cache struct {
 	Storage *storage.Storage
-	Files   map[string]map[string]*CachedFile
-	TTL     int64
+	Files   map[string]*CachedFile
+	TTL     time.Duration
+	mu sync.RWMutex
 }
 
-func NewCache(stor *storage.Storage, ttl int64) *Cache {
+func NewCache(stor *storage.Storage, ttl time.Duration) *Cache {
 	return &Cache{
 		Storage: stor,
 		TTL:     ttl,
-		Files:   make(map[string]map[string]*CachedFile),
+		Files:   make(map[string]*CachedFile),
 	}
+}
+
+func (c *Cache) GetZipFile(ZipFile string) ([]byte, error){
+	// целый зип файл всегда достаем из хранилища
+	c.mu.RLock()
+	if zf, ok := c.Storage.Files[ZipFile]; ok {
+		return zf.Bytes()
+	}
+	c.mu.RUnlock()
+	return nil, errors.New(fmt.Sprintf("Zip file with name = %s is not found", ZipFile))
+}
+
+func (c *Cache) loadFile(ZipFile string) (bool, error) {
+	// если файлы уже загружены, то ничего не делаем
+	if _, ok := c.Files[ZipFile]; ok{
+		return ok, nil
+	}
+
+	// иначе вычитываем все файлы, которые лежат в хранилище
+	files, err := c.Storage.Files[ZipFile].Read()
+	if err != nil {
+		return false, err
+	}
+
+	// заполняем кэш и время жизни
+	c.Files[ZipFile] = &CachedFile{
+		file: files,
+		ttl: time.Now().Add(c.TTL).UnixNano(),
+	}
+	return true, nil
+}
+
+func (c *Cache) GetFiles(ZipFile string, Files []string) (map[string][]byte, error) {
+	c.mu.RLock()
+	// если файлов нет, то загружаем
+	if _, ok := c.Files[ZipFile]; !ok{
+		if ok, err := c.loadFile(ZipFile); !ok {
+			return nil, err
+		}
+	}
+	c.mu.RUnlock()
+	return c.Files[ZipFile].file, nil
 }
