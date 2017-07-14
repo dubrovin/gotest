@@ -88,7 +88,7 @@ func (c *Cache) Checker() {
 
 }
 
-func (c *Cache) AddZipFile(path string) error{
+func (c *Cache) AddZipFile(path string) error {
 	c.mu.Lock()
 	zp, err := storage.NewZipFile(path)
 	if err != nil {
@@ -99,7 +99,7 @@ func (c *Cache) AddZipFile(path string) error{
 	return nil
 }
 
-func (c *Cache) GetAllZipFiles() map[string]*storage.ZipFile{
+func (c *Cache) GetAllZipFiles() map[string]*storage.ZipFile {
 	c.mu.RLock()
 	files := c.Storage.Files
 	c.mu.RUnlock()

@@ -6,8 +6,8 @@ import (
 	"github.com/dubrovin/gotest/cache"
 	"github.com/qiangxue/fasthttp-routing"
 	"github.com/valyala/fasthttp"
-	"log"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 )

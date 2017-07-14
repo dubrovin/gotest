@@ -47,3 +47,8 @@ curl -i -X POST -H "Content-Type: multipart/form-data" -F "data=@zip.zip" http:/
 ```
 ab -n 10000 -c 10 http://127.0.0.1:8080/api/list > ab_log.txt
 ```
+
+### TODO:
+Для throttling встроить https://github.com/throttled/throttled
+Добавить в api получение файла, получение содержимого файла
+Покрыть тестами api

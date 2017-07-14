@@ -6,8 +6,6 @@ import (
 	"log"
 )
 
-// https://github.com/throttled/throttled
-
 // Server -
 type Server struct {
 	Conf    *appconf.Config
